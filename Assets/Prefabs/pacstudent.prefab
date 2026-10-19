@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1233628325212108757}
   - component: {fileID: 7437983764416137540}
-  - component: {fileID: 4543170596785750973}
-  - component: {fileID: 828380329274060247}
   - component: {fileID: 3473693566944351699}
   m_Layer: 0
   m_Name: pacstudent
@@ -94,49 +92,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!95 &4543170596785750973
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6930852427671157715}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 19f4f699bb2136247aa15c60b4be76ee, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &828380329274060247
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6930852427671157715}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeeefe84146611f4d8ed731a94347ce8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PacStudentMovement
-  speed: 2
-  corners:
-  - {x: -12.85, y: 12.82, z: 0}
-  - {x: -7.72, y: 12.82, z: 0}
-  - {x: -7.72, y: 8.97, z: 0}
-  - {x: -12.85, y: 8.97, z: 0}
-  animator: {fileID: 4543170596785750973}
-  audioSource: {fileID: 3473693566944351699}
-  moveAudio: {fileID: 8300000, guid: 461b4644004b34a4aa7dc97f0950806d, type: 3}
 --- !u!82 &3473693566944351699
 AudioSource:
   m_ObjectHideFlags: 0
