@@ -26,4 +26,9 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.LoadScene("MAINscene");
     }
+
+    public void ExittoStartScene()
+    {
+        SceneManager.LoadScene("StartScene");
+    }
 }
