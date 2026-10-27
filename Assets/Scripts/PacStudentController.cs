@@ -26,6 +26,9 @@ public class PacStudentController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     private int score;
 
+    [SerializeField] private AudioSource cherryAudio;
+    [SerializeField] private AudioClip cherryClip;
+
     private Vector2Int leftTunnelEnd;
     private Vector2Int rightTunnelEnd;
 
@@ -253,9 +256,20 @@ public class PacStudentController : MonoBehaviour
         eatenCells[cell.x, cell.y] = true;
         Vector3Int tilemapCell = normalPelletTilemap.WorldToCell(CellToWorld(cell));
         normalPelletTilemap.SetTile(tilemapCell, null);
+        AddScore(10);
+    }
 
-        score += 10;
+    private void AddScore(int points)
+    {
+        score += points;
         scoreText.text = score.ToString("D6");
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Cherry")) return;
+        Destroy(other.gameObject);
+        AddScore(100);
+        cherryAudio.PlayOneShot(cherryClip);
+    }
 }

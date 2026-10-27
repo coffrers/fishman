@@ -9808,6 +9808,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1776191554}
   m_CullTransparentMesh: 1
+--- !u!1 &1853710968 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6930852427671157715, guid: 1234900344767a548aefa2eeaa3e8471, type: 3}
+  m_PrefabInstance: {fileID: 2021035320}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2021035320
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9901,6 +9906,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2021035321}
     - target: {fileID: 8907053932306994539, guid: 1234900344767a548aefa2eeaa3e8471, type: 3}
+      propertyPath: cherryClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 876e88883bfa8214bb9fe6bc3278611e, type: 3}
+    - target: {fileID: 8907053932306994539, guid: 1234900344767a548aefa2eeaa3e8471, type: 3}
+      propertyPath: cherryAudio
+      value: 
+      objectReference: {fileID: 2021035325}
+    - target: {fileID: 8907053932306994539, guid: 1234900344767a548aefa2eeaa3e8471, type: 3}
       propertyPath: wallParticles
       value: 
       objectReference: {fileID: 1135272303}
@@ -9911,13 +9924,87 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6930852427671157715, guid: 1234900344767a548aefa2eeaa3e8471, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2021035329}
+    - targetCorrespondingSourceObject: {fileID: 6930852427671157715, guid: 1234900344767a548aefa2eeaa3e8471, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2021035328}
   m_SourcePrefab: {fileID: 100100000, guid: 1234900344767a548aefa2eeaa3e8471, type: 3}
 --- !u!82 &2021035321 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 1314125856590938517, guid: 1234900344767a548aefa2eeaa3e8471, type: 3}
   m_PrefabInstance: {fileID: 2021035320}
   m_PrefabAsset: {fileID: 0}
+--- !u!82 &2021035325 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3473693566944351699, guid: 1234900344767a548aefa2eeaa3e8471, type: 3}
+  m_PrefabInstance: {fileID: 2021035320}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &2021035328
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853710968}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.3
+--- !u!50 &2021035329
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853710968}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!198 &2081321569 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 1829138640209785797, guid: 1234900344767a548aefa2eeaa3e8471, type: 3}
