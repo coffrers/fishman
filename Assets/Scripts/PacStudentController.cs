@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using TMPro;
 
 public class PacStudentController : MonoBehaviour
 {
@@ -19,6 +21,10 @@ public class PacStudentController : MonoBehaviour
     [SerializeField] private AudioSource wallAudio;
     [SerializeField] private AudioClip wallClip;
     private bool hasBumped;
+
+    [SerializeField] private Tilemap normalPelletTilemap;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    private int score;
 
     private Vector2Int leftTunnelEnd;
     private Vector2Int rightTunnelEnd;
@@ -48,6 +54,7 @@ public class PacStudentController : MonoBehaviour
         int lastColumn = LevelGenerator.FullMap.GetLength(1) - 1;
         leftTunnelEnd = new Vector2Int(middleRow, 0);
         rightTunnelEnd = new Vector2Int(middleRow, lastColumn);
+        scoreText.text = score.ToString("D6");
     }
 
     // Update is called once per frame
@@ -146,7 +153,7 @@ public class PacStudentController : MonoBehaviour
         {
             carryOver = lerpTimer - LerpDuration;
             transform.position = endPos;
-            eatenCells[targetCell.x, targetCell.y] = true;
+            EatPellet(targetCell);
             currentCell = targetCell;
             CheckTeleport();
             isLerping = false;
@@ -237,6 +244,18 @@ public class PacStudentController : MonoBehaviour
         {
             Teleport(leftTunnelEnd);
         }
+    }
+
+    private void EatPellet(Vector2Int cell)
+    {
+        if (LevelGenerator.FullMap[cell.x, cell.y] != 5) return;
+        if (eatenCells[cell.x, cell.y]) return;
+        eatenCells[cell.x, cell.y] = true;
+        Vector3Int tilemapCell = normalPelletTilemap.WorldToCell(CellToWorld(cell));
+        normalPelletTilemap.SetTile(tilemapCell, null);
+
+        score += 10;
+        scoreText.text = score.ToString("D6");
     }
 
 }
