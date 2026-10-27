@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Cherry
+  - PowerPellet
   layers:
   - Default
   - TransparentFX

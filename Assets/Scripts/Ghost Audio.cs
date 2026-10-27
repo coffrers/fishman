@@ -5,6 +5,7 @@ public class GhostAudio : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip introClip;
     public AudioClip ghostNormalAudio;
+    public AudioClip ghostScaredAudio;
 
     private bool switched = false;
     private float timer = 0f;
@@ -34,6 +35,22 @@ public class GhostAudio : MonoBehaviour
     }
 
     private void switchGhostLoop()
+    {
+        switched = true;
+        audioSource.clip = ghostNormalAudio;
+        audioSource.loop = true;
+        audioSource.Play();
+    }
+
+    public void PlayScared()
+    {
+        switched = true;
+        audioSource.clip = ghostScaredAudio;
+        audioSource.loop = true;
+        audioSource.Play();
+    }
+
+    public void PlayNormal()
     {
         switched = true;
         audioSource.clip = ghostNormalAudio;

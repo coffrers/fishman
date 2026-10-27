@@ -26,6 +26,8 @@ public class PacStudentController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     private int score;
 
+    [SerializeField] private GhostState ghostManager;
+
     [SerializeField] private AudioSource cherryAudio;
     [SerializeField] private AudioClip cherryClip;
 
@@ -267,9 +269,19 @@ public class PacStudentController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Cherry")) return;
-        Destroy(other.gameObject);
-        AddScore(100);
-        cherryAudio.PlayOneShot(cherryClip);
-    }
+        if (other.CompareTag("Cherry"))
+        {
+            Destroy(other.gameObject);
+            cherryAudio.PlayOneShot(cherryClip);
+            AddScore(100);
+
+        }
+        else if (other.CompareTag("PowerPellet"))
+        {
+            Destroy(other.gameObject);
+            AddScore(50);
+            ghostManager.StartScared();
+        }
+    } 
+
 }
