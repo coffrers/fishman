@@ -20,6 +20,9 @@ public class PacStudentController : MonoBehaviour
     [SerializeField] private AudioClip wallClip;
     private bool hasBumped;
 
+    private Vector2Int leftTunnelEnd;
+    private Vector2Int rightTunnelEnd;
+
     private Direction lastInput = Direction.None;
     private Direction currentInput = Direction.None;
 
@@ -41,6 +44,10 @@ public class PacStudentController : MonoBehaviour
         animator = GetComponent<Animator>();
         SetFacing(Direction.Right);
         animator.speed = 0f;
+        int middleRow = LevelGenerator.FullMap.GetLength(0) / 2;
+        int lastColumn = LevelGenerator.FullMap.GetLength(1) - 1;
+        leftTunnelEnd = new Vector2Int(middleRow, 0);
+        rightTunnelEnd = new Vector2Int(middleRow, lastColumn);
     }
 
     // Update is called once per frame
@@ -141,6 +148,7 @@ public class PacStudentController : MonoBehaviour
             transform.position = endPos;
             eatenCells[targetCell.x, targetCell.y] = true;
             currentCell = targetCell;
+            CheckTeleport();
             isLerping = false;
         }
     }
@@ -213,4 +221,22 @@ public class PacStudentController : MonoBehaviour
                 return false;
         }
     }
+
+    private void Teleport(Vector2Int destination)
+    {
+        currentCell = destination;
+        transform.position = CellToWorld(destination);
+    }
+    private void CheckTeleport()
+    {
+        if (currentCell == leftTunnelEnd)
+        {
+            Teleport(rightTunnelEnd);
+        }
+        else if (currentCell == rightTunnelEnd)
+        {
+            Teleport(leftTunnelEnd);
+        }
+    }
+
 }
