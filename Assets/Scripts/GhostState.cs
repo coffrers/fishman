@@ -9,16 +9,23 @@ public class GhostState : MonoBehaviour
     [SerializeField] private GameObject ghostTimerObject;
     [SerializeField] private TextMeshProUGUI ghostTimerText;
 
-    private const int Normal = 0;
-    private const int Scared = 1;
-    private const int Recovering = 2;
-    private const int Dead = 3;
+    public const int Normal = 0;
+    public const int Scared = 1;
+    public const int Recovering = 2;
+    public const int Dead = 3;
 
     private Coroutine scaredState;
+    private Vector3[] startPositions;
+    public bool GhostsFrozen { get; private set; }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         ghostTimerObject.SetActive(false);
+        startPositions = new Vector3[ghosts.Length];
+        for(int i = 0; i < ghosts.Length; i++)
+        {
+            startPositions[i] = ghosts[i].transform.position;
+        }
     }
 
     public void StartScared()
@@ -62,6 +69,30 @@ public class GhostState : MonoBehaviour
             if (ghost.GetInteger("GhostState") == Dead) continue;
             ghost.SetInteger("GhostState", state);
         }
+    }
+
+    public void FreezeGhosts()
+    {
+        GhostsFrozen = true;
+    }
+
+    public void ResetGhosts()
+    {
+        if(scaredState != null)
+        {
+            StopCoroutine(scaredState);
+            scaredState = null;
+        }
+
+        for(int i = 0; i < ghosts.Length; i++)
+        {
+            ghosts[i].transform.position = startPositions[i];
+            ghosts[i].SetInteger("GhostState", Normal);
+        }
+
+        ghostTimerObject.SetActive(false);
+        ghostAudio.PlayNormal();
+        GhostsFrozen = false;
     }
     // Update is called once per frame
     void Update()

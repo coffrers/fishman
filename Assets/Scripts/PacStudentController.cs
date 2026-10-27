@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using TMPro;
+using System.Collections;
+using UnityEngine.UI;
 
 public class PacStudentController : MonoBehaviour
 {
@@ -31,6 +33,14 @@ public class PacStudentController : MonoBehaviour
     [SerializeField] private AudioSource cherryAudio;
     [SerializeField] private AudioClip cherryClip;
 
+    [SerializeField] private Image[] lifeIcons;
+    [SerializeField] private ParticleSystem deathParticles;
+    [SerializeField] private AudioClip deathClip;
+    [SerializeField] private float deathDuration = 1f;
+
+    private int lives = 3;
+    private bool isDead;
+ 
     private Vector2Int leftTunnelEnd;
     private Vector2Int rightTunnelEnd;
 
@@ -65,6 +75,7 @@ public class PacStudentController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead) return;
         GatherInput();
         if (isLerping)
         {
@@ -282,6 +293,57 @@ public class PacStudentController : MonoBehaviour
             AddScore(50);
             ghostManager.StartScared();
         }
+        else if (other.CompareTag("Ghost"))
+        {
+            Animator ghostAnimator = other.GetComponent<Animator>();
+            if (!isDead && ghostAnimator.GetInteger("GhostState") == GhostState.Normal)
+            {
+                StartCoroutine(DieAndRespawn());
+            }
+        }
     } 
 
+    private IEnumerator DieAndRespawn()
+    {
+        isDead = true;
+        ghostManager.FreezeGhosts();
+        isLerping = false;
+        bubbles.Stop();
+        movementAudio.Stop();
+
+        LoseLife();
+
+        animator.speed = 1f;
+        animator.SetInteger("Direction", 0);
+        animator.SetTrigger("Die");
+        deathParticles.transform.position = transform.position;
+        deathParticles.Play();
+        wallAudio.PlayOneShot(deathClip);
+
+        yield return new WaitForSeconds(deathDuration);
+
+        if (lives <= 0) yield break;
+        Respawn();
+        ghostManager.ResetGhosts();
+        yield return new WaitForSeconds(0.1f);
+        isDead = false;
+    }
+
+    private void LoseLife()
+    {
+        lives = lives - 1;
+        lifeIcons[lives].enabled = false;
+    }
+
+    private void Respawn()
+    {
+        currentCell = startCell;
+        transform.position = CellToWorld(currentCell);
+        lastInput = Direction.None;
+        currentInput = Direction.None;
+        carryOver = 0f;
+        hasBumped = false;
+
+        SetFacing(Direction.Right);
+    }
 }
