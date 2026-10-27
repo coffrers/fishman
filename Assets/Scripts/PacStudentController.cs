@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class PacStudentController : MonoBehaviour
 {
@@ -15,6 +14,11 @@ public class PacStudentController : MonoBehaviour
 
     [SerializeField] private float tilesPerSecond = 5f;
     [SerializeField] private Vector2Int startCell = new Vector2Int(1, 1);
+
+    [SerializeField] private ParticleSystem wallParticles;
+    [SerializeField] private AudioSource wallAudio;
+    [SerializeField] private AudioClip wallClip;
+    private bool hasBumped;
 
     private Direction lastInput = Direction.None;
     private Direction currentInput = Direction.None;
@@ -80,10 +84,32 @@ public class PacStudentController : MonoBehaviour
         {
             currentInput = lastInput;
         }
-        else if(StartMove(currentInput))
+        else if(!StartMove(currentInput))
         {
-            carryOver = 0f;
+            HitWall();
         }
+    }
+
+    private void HitWall()
+    {
+        carryOver = 0f;
+        if (hasBumped) return;
+        Direction blocked;
+        if(currentInput != Direction.None)
+        {
+            blocked = currentInput;
+        } else
+        {
+            blocked = lastInput;
+        }
+        if (blocked == Direction.None) return;
+        hasBumped = true;
+        Vector2Int offset = DirectionToOffset(blocked);
+        Vector3 mapDir = new Vector3(offset.y, -offset.x, 0f);
+        Vector3 point = CellToWorld(currentCell) + mapDir * (LevelGenerator.TileSize * 0.5f);
+        wallParticles.transform.position = point;
+        wallParticles.Play();
+        wallAudio.PlayOneShot(wallClip);
     }
 
     private bool StartMove(Direction direction)
@@ -95,7 +121,9 @@ public class PacStudentController : MonoBehaviour
         startPos = CellToWorld(currentCell);
         endPos = CellToWorld(targetCell);
         lerpTimer = carryOver;
+        carryOver = 0f;
         isLerping = true;
+        hasBumped = false;
         SetFacing(direction);
         PlayMovementAudio(targetCell);
         return true;
