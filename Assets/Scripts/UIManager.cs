@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GhostAudio ghostAudio;
     [SerializeField] private PacStudentController pacStudent;
     [SerializeField] private GhostState ghostState;
+    [SerializeField] private TextMeshProUGUI highScoreText;
 
     [SerializeField] private TextMeshProUGUI gameTimerText;
 
@@ -24,6 +25,12 @@ public class UIManager : MonoBehaviour
         {
             gameTimerText.text = "00:00:00";
             StartCoroutine(Countdown());
+        }
+        if(highScoreText != null)
+        {
+            int highScore = PlayerPrefs.GetInt("HighScore", 0);
+            float highScoreTime = PlayerPrefs.GetFloat("HighScoreTime", 0f);
+            highScoreText.text = " High Score " + highScore.ToString("D6") + "  Time: " + FormatTime(highScoreTime);
         }
     }
 
@@ -65,6 +72,14 @@ public class UIManager : MonoBehaviour
         pacStudent.SetControl(true);
         ghostState.UnfreezeGhosts();
         roundStarted = true;
+    }
+
+    private string FormatTime(float time)
+    {
+        int minutes = (int)(time / 60f);
+        int seconds = (int)(time % 60f);
+        int hundredths = (int)((time * 100f) % 100f);
+        return minutes.ToString("00") + ":" + seconds.ToString("00") + ":" + hundredths.ToString("00");
     }
 
     public void LoadLevel1()
