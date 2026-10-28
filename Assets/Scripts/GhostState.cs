@@ -131,6 +131,11 @@ public class GhostState : MonoBehaviour
         GhostsFrozen = true;
     }
 
+    public void UnfreezeGhosts()
+    {
+        GhostsFrozen = false;
+    }
+
     public void ResetGhosts()
     {
         if(scaredState != null)

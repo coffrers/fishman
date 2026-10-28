@@ -54,6 +54,8 @@ public class PacStudentController : MonoBehaviour
     private Vector3 startPos;
     private Vector3 endPos;
 
+    private bool controlEnabled;
+
     private bool isLerping;
     private float lerpTimer;
     private float carryOver;
@@ -77,7 +79,15 @@ public class PacStudentController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isDead) return;
+        if (isDead)
+        {
+            return;
+        }
+
+        if (controlEnabled == false)
+        {
+            return;
+        }
         GatherInput();
         if (isLerping)
         {
@@ -282,6 +292,7 @@ public class PacStudentController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (!controlEnabled) return;
         if (other.CompareTag("Cherry"))
         {
             Destroy(other.gameObject);
@@ -353,5 +364,10 @@ public class PacStudentController : MonoBehaviour
         hasBumped = false;
 
         SetFacing(Direction.Right);
+    }
+
+    public void SetControl(bool value)
+    {
+        controlEnabled = value;
     }
 }

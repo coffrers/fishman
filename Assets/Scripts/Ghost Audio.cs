@@ -52,6 +52,12 @@ public class GhostAudio : MonoBehaviour
         audioSource.Play();
     }
 
+    public void PlayIntro()
+    {
+        audioSource.clip = introClip;
+        audioSource.loop = false;
+        audioSource.Play();
+    }
     public void PlayNormal()
     {
         if (audioSource.clip == ghostNormalAudio && audioSource.isPlaying) return;
