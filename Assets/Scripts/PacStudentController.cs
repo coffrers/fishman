@@ -33,6 +33,8 @@ public class PacStudentController : MonoBehaviour
     [SerializeField] private AudioSource cherryAudio;
     [SerializeField] private AudioClip cherryClip;
 
+    [SerializeField] private AudioClip ghostEatClip;
+
     [SerializeField] private Image[] lifeIcons;
     [SerializeField] private ParticleSystem deathParticles;
     [SerializeField] private AudioClip deathClip;
@@ -295,10 +297,16 @@ public class PacStudentController : MonoBehaviour
         }
         else if (other.CompareTag("Ghost"))
         {
+            if (isDead) return;
             Animator ghostAnimator = other.GetComponent<Animator>();
-            if (!isDead && ghostAnimator.GetInteger("GhostState") == GhostState.Normal)
+            if(ghostAnimator.GetInteger("GhostState") == GhostState.Normal)
             {
                 StartCoroutine(DieAndRespawn());
+            }
+            else if (ghostManager.EatGhost(ghostAnimator))
+            {
+                wallAudio.PlayOneShot(ghostEatClip);
+                AddScore(300);
             }
         }
     } 

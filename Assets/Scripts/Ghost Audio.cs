@@ -6,6 +6,7 @@ public class GhostAudio : MonoBehaviour
     public AudioClip introClip;
     public AudioClip ghostNormalAudio;
     public AudioClip ghostScaredAudio;
+    public AudioClip ghostDeadAudio;
 
     private bool switched = false;
     private float timer = 0f;
@@ -44,6 +45,7 @@ public class GhostAudio : MonoBehaviour
 
     public void PlayScared()
     {
+        if (audioSource.clip == ghostScaredAudio && audioSource.isPlaying) return;
         switched = true;
         audioSource.clip = ghostScaredAudio;
         audioSource.loop = true;
@@ -52,8 +54,18 @@ public class GhostAudio : MonoBehaviour
 
     public void PlayNormal()
     {
+        if (audioSource.clip == ghostNormalAudio && audioSource.isPlaying) return;
         switched = true;
         audioSource.clip = ghostNormalAudio;
+        audioSource.loop = true;
+        audioSource.Play();
+    }
+
+    public void PlayDead()
+    {
+        if (audioSource.clip == ghostDeadAudio && audioSource.isPlaying) return;
+        switched = true;
+        audioSource.clip = ghostDeadAudio;
         audioSource.loop = true;
         audioSource.Play();
     }

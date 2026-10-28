@@ -15,13 +15,17 @@ public class GhostState : MonoBehaviour
     public const int Dead = 3;
 
     private Coroutine scaredState;
+    private Coroutine[] deadStates;
     private Vector3[] startPositions;
+    private int scaredSecondsLeft;
+    private int deadGhostCount;
     public bool GhostsFrozen { get; private set; }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         ghostTimerObject.SetActive(false);
         startPositions = new Vector3[ghosts.Length];
+        deadStates = new Coroutine[ghosts.Length];
         for(int i = 0; i < ghosts.Length; i++)
         {
             startPositions[i] = ghosts[i].transform.position;
@@ -34,32 +38,83 @@ public class GhostState : MonoBehaviour
         {
             StopCoroutine(scaredState);
         }
+        scaredSecondsLeft = 10;
         scaredState = StartCoroutine(ScaredState());
     }
 
     private IEnumerator ScaredState()
     {
         SetAllGhosts(Scared);
-        ghostAudio.PlayScared();
+        UpdateGhostMusic();
         ghostTimerObject.SetActive(true);
-        int secondsLeft = 10;
-        while(secondsLeft > 0)
+        while(scaredSecondsLeft > 0)
         {
-            ghostTimerText.text = secondsLeft.ToString();
+            ghostTimerText.text = scaredSecondsLeft.ToString();
 
-            if (secondsLeft == 3)
+            if (scaredSecondsLeft == 3)
             {
                 SetAllGhosts(Recovering);
             }
 
             yield return new WaitForSeconds(1f);
-            secondsLeft = secondsLeft - 1;
+            scaredSecondsLeft = scaredSecondsLeft - 1;
         }
 
         SetAllGhosts(Normal);
-        ghostAudio.PlayNormal();
         ghostTimerObject.SetActive(false);
         scaredState = null;
+        UpdateGhostMusic();
+    }
+
+    public bool EatGhost(Animator ghost)
+    {
+        int index = System.Array.IndexOf(ghosts, ghost);
+        if (index < 0) return false;
+        int state = ghost.GetInteger("GhostState");
+        if (state == Normal) return false;
+        if (state == Dead) return false;
+
+        ghost.SetInteger("GhostState", Dead);
+        deadGhostCount = deadGhostCount + 1;
+        UpdateGhostMusic();
+        deadStates[index] = StartCoroutine(DeadState(index));
+        return true;
+    }
+
+    private IEnumerator DeadState(int index)
+    {
+        yield return new WaitForSeconds(3f);
+        if(scaredSecondsLeft <= 0)
+        {
+            ghosts[index].SetInteger("GhostState", Normal);
+        }
+        else if (scaredSecondsLeft <= 3)
+        {
+            ghosts[index].SetInteger("GhostState", Recovering);
+        }
+        else
+        {
+            ghosts[index].SetInteger("GhostState", Scared);
+        }
+        deadGhostCount = deadGhostCount - 1;
+        deadStates[index] = null;
+        UpdateGhostMusic();
+    }
+
+    private void UpdateGhostMusic()
+    {
+        if(deadGhostCount > 0)
+        {
+            ghostAudio.PlayDead();
+        }
+        else if(scaredSecondsLeft > 0)
+        {
+            ghostAudio.PlayScared();
+        }
+        else
+        {
+            ghostAudio.PlayNormal();
+        }
     }
 
     private void SetAllGhosts(int state)
@@ -83,6 +138,18 @@ public class GhostState : MonoBehaviour
             StopCoroutine(scaredState);
             scaredState = null;
         }
+
+        for (int i = 0; i < deadStates.Length; i++)
+        {
+            if(deadStates[i] != null)
+            {
+                StopCoroutine(deadStates[i]);
+                deadStates[i] = null;
+            }
+        }
+
+        deadGhostCount = 0;
+        scaredSecondsLeft = 0;
 
         for(int i = 0; i < ghosts.Length; i++)
         {
