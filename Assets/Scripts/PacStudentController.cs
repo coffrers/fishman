@@ -40,6 +40,11 @@ public class PacStudentController : MonoBehaviour
     [SerializeField] private AudioClip deathClip;
     [SerializeField] private float deathDuration = 1f;
 
+    [SerializeField] private UIManager uiManager;
+
+    private int pelletsLeft;
+    private int powerPelletsLeft;
+
     private int lives = 3;
     private bool isDead;
  
@@ -74,6 +79,19 @@ public class PacStudentController : MonoBehaviour
         leftTunnelEnd = new Vector2Int(middleRow, 0);
         rightTunnelEnd = new Vector2Int(middleRow, lastColumn);
         scoreText.text = score.ToString("D6");
+
+        for (int row = 0; row < LevelGenerator.FullMap.GetLength(0); row++)
+        {
+            for (int col = 0; col < LevelGenerator.FullMap.GetLength(1); col++)
+            {
+                if (LevelGenerator.FullMap[row, col] == 5)
+                {
+                    pelletsLeft = pelletsLeft + 1;
+                }
+            }
+        }
+
+        powerPelletsLeft = GameObject.FindGameObjectsWithTag("PowerPellet").Length;
     }
 
     // Update is called once per frame
@@ -282,6 +300,8 @@ public class PacStudentController : MonoBehaviour
         Vector3Int tilemapCell = normalPelletTilemap.WorldToCell(CellToWorld(cell));
         normalPelletTilemap.SetTile(tilemapCell, null);
         AddScore(10);
+        pelletsLeft = pelletsLeft - 1;
+        CheckAllPelletsEaten();
     }
 
     private void AddScore(int points)
@@ -305,6 +325,8 @@ public class PacStudentController : MonoBehaviour
             Destroy(other.gameObject);
             AddScore(50);
             ghostManager.StartScared();
+            powerPelletsLeft = powerPelletsLeft - 1;
+            CheckAllPelletsEaten();
         }
         else if (other.CompareTag("Ghost"))
         {
@@ -341,7 +363,11 @@ public class PacStudentController : MonoBehaviour
 
         yield return new WaitForSeconds(deathDuration);
 
-        if (lives <= 0) yield break;
+        if (lives <= 0)
+        {
+            uiManager.GameOver(score);
+            yield break;
+        }
         Respawn();
         ghostManager.ResetGhosts();
         yield return new WaitForSeconds(0.1f);
@@ -369,5 +395,13 @@ public class PacStudentController : MonoBehaviour
     public void SetControl(bool value)
     {
         controlEnabled = value;
+    }
+
+    private void CheckAllPelletsEaten()
+    {
+        if (pelletsLeft <= 0 && powerPelletsLeft <= 0)
+        {
+            uiManager.GameOver(score);
+        }
     }
 }

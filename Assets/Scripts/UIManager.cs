@@ -16,7 +16,10 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI gameTimerText;
 
+    [SerializeField] private GameObject gameOverText;
+
     private bool roundStarted;
+    private bool gameOver;
     private float gameTime;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -82,6 +85,49 @@ public class UIManager : MonoBehaviour
         return minutes.ToString("00") + ":" + seconds.ToString("00") + ":" + hundredths.ToString("00");
     }
 
+    public void GameOver(int finalScore)
+    {
+        if (gameOver) return;
+        gameOver = true;
+        roundStarted = false;
+        pacStudent.SetControl(false);
+        ghostState.FreezeGhosts();
+        countdownImage.SetActive(true);
+        gameOverText.SetActive(true);
+        SaveHighScore(finalScore);
+        StartCoroutine(ReturnToStartScene());
+    }
+
+    private void SaveHighScore(int finalScore)
+    {
+        int previousScore = PlayerPrefs.GetInt("HighScore", 0);
+        float previousTime = PlayerPrefs.GetFloat("HighScoreTime", 0f);
+        bool Saved = false;
+        if(finalScore > previousScore)
+        {
+            Saved = true;
+        }
+        else if (finalScore == previousScore)
+        {
+            if(gameTime < previousTime)
+            {
+                Saved = true;
+            }
+        }
+
+        if (Saved)
+        {
+            PlayerPrefs.SetInt("HighScore", finalScore);
+            PlayerPrefs.SetFloat("HighScoreTime", gameTime);
+            PlayerPrefs.Save();
+        }
+    }
+
+    private IEnumerator ReturnToStartScene()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("StartScene");
+    }
     public void LoadLevel1()
     {
         audioSource.Play();
@@ -95,6 +141,7 @@ public class UIManager : MonoBehaviour
 
     public void ExittoStartScene()
     {
+        if (gameOver) return;
         SceneManager.LoadScene("StartScene");
     }
 }
